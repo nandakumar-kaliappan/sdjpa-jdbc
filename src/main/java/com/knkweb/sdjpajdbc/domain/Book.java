@@ -13,6 +13,7 @@ import java.util.Objects;
 @Builder
 @Getter
 @Setter
+@EqualsAndHashCode
 @ToString
 @Entity
 public class Book {
@@ -24,16 +25,4 @@ public class Book {
     private String title;
     private Long authorId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return Objects.equals(id, book.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
