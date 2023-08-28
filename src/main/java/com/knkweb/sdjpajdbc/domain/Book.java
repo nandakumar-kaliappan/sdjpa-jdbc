@@ -2,11 +2,7 @@ package com.knkweb.sdjpajdbc.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +19,8 @@ public class Book {
     private String isbn;
     private String publisher;
     private String title;
-    private Long authorId;
+//    @Column(name = "author_id")
+    @Transient
+    private Author author;
 
 }

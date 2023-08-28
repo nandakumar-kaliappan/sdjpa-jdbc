@@ -1,5 +1,7 @@
 package com.knkweb.sdjpajdbc;
 
+import com.knkweb.sdjpajdbc.dao.AuthorDao;
+import com.knkweb.sdjpajdbc.dao.AuthorDaoImpl;
 import com.knkweb.sdjpajdbc.dao.BookDao;
 import com.knkweb.sdjpajdbc.dao.BookDaoImpl;
 import com.knkweb.sdjpajdbc.domain.Book;
@@ -16,12 +18,15 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(BookDaoImpl.class)
+@Import({BookDaoImpl.class, AuthorDaoImpl.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BookDaoIntegrationTest {
 
     @Autowired
     BookDao bookDao;
+
+    @Autowired
+    AuthorDao authorDao;
 
     @Test
     void updateBook() {
@@ -30,7 +35,6 @@ public class BookDaoIntegrationTest {
                 .title("panjali sabatham 2")
                 .isbn("no isbn")
                 .publisher("TN Govt")
-                .authorId(1L)
                 .build();
         Book bookSaved = bookDao.saveNewBook(book);
 
@@ -58,7 +62,6 @@ public class BookDaoIntegrationTest {
                 .title("panjali sabatham 2")
                 .isbn("no isbn")
                 .publisher("TN Govt")
-                .authorId(1L)
                 .build();
         Book bookSaved = bookDao.saveNewBook(book);
 
@@ -80,7 +83,6 @@ public class BookDaoIntegrationTest {
                     .title("panjali sabatham")
                     .isbn("no isbn")
                     .publisher("TN Govt")
-                    .authorId(1L)
                     .build();
 
         Book bookSaved = bookDao.saveNewBook(book);

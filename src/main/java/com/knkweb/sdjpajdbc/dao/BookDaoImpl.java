@@ -10,9 +10,11 @@ import java.sql.*;
 public class BookDaoImpl implements BookDao {
 
     private final DataSource dataSource;
+    private final AuthorDao authorDao;
 
-    public BookDaoImpl(DataSource dataSource) {
+    public BookDaoImpl(DataSource dataSource, AuthorDao authorDao) {
         this.dataSource = dataSource;
+        this.authorDao = authorDao;
     }
 
     @Override
@@ -82,7 +84,11 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setString(1, book.getIsbn());
             preparedStatement.setString(2, book.getPublisher());
             preparedStatement.setString(3, book.getTitle());
-            preparedStatement.setLong(4, book.getAuthorId());
+            if (book.getAuthor() != null) {
+                preparedStatement.setLong(4, book.getAuthor().getId());
+            } else{
+                preparedStatement.setNull(4, -5);
+            }
             preparedStatement.execute();
 
             resultSet = statement.executeQuery("SELECT LAST_INSERT_ID()");
@@ -136,7 +142,11 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setString(1, book.getIsbn());
             preparedStatement.setString(2, book.getPublisher());
             preparedStatement.setString(3, book.getTitle());
-            preparedStatement.setLong(4, book.getAuthorId());
+            if(book.getAuthor() != null) {
+                preparedStatement.setLong(4, book.getAuthor().getId());
+            }else{
+                preparedStatement.setNull(4, -5);
+            }
             preparedStatement.setLong(5, book.getId());
             preparedStatement.execute();
 
@@ -171,12 +181,14 @@ public class BookDaoImpl implements BookDao {
     }
 
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException {
-        return Book.builder()
+        Book book = Book.builder()
                 .id(resultSet.getLong("id"))
                 .title(resultSet.getString("title"))
                 .isbn(resultSet.getString("isbn"))
                 .publisher(resultSet.getString("publisher"))
-                .authorId(resultSet.getLong("author_id"))
                 .build();
+
+        book.setAuthor(authorDao.getById(resultSet.getLong("author_id")));
+        return  book;
     }
 }
